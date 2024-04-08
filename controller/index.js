@@ -16,14 +16,15 @@ exports.formProduct = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  const prod = Product.fetchAll();
-  res.render("shop", {
-    pageTitle: "Shop",
-    path: "/",
-    formCSS: false,
-    productCSS: true,
-    hasProduct: false,
-    hasProduct: prod?.length > 0,
-    prods: prod,
+  Product.fetchAll((prod) => {
+    res.render("shop", {
+      pageTitle: "Shop",
+      path: "/",
+      formCSS: false,
+      productCSS: true,
+      hasProduct: false,
+      hasProduct: prod?.length > 0,
+      prods: prod,
+    });
   });
 };
