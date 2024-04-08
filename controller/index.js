@@ -7,7 +7,7 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.formProduct = (req, res, next) => {
-  res.render("add-product", {
+  res.render("admin/add-product", {
     pageTitle: "Add Product",
     formCSS: true,
     productCSS: true,
@@ -17,7 +17,7 @@ exports.formProduct = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   Product.fetchAll((prod) => {
-    res.render("shop", {
+    res.render("shop/product-list", {
       pageTitle: "Shop",
       path: "/",
       formCSS: false,
