@@ -28,6 +28,24 @@ exports.getProduct = (req, res, next) => {
   });
 };
 
+// Products Details
+exports.getProductDetails = (req, res, next) => {
+  const prodId = req.params.id;
+  // const prodId = res.req.params.id;
+  console.log(prodId);
+
+  Product.findById(prodId, (prod) => {
+    console.log("prod =>", prod);
+    res.render("shop/product-detail", {
+      pageTitle: "Product Detail",
+      path: "/products",
+      prods: prod,
+      formCSS: false,
+      productCSS: true,
+    });
+  });
+};
+
 // Cart
 exports.getCartProduct = (req, res, next) => {
   res.render("shop/cart", {
