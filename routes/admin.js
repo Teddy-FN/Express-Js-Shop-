@@ -9,10 +9,13 @@ const controllerAdminData = require("../controller/admin");
 router.post("/add-product", controllerAdminData?.postAddProduct);
 
 // Add product
-router.get("/add-product", controllerAdminData?.formProduct);
+router.get("/add-product", controllerAdminData?.addFormProduct);
 
-// Edit Products
-router.get("/edit-product", controllerAdminData?.editFormProduct);
+// Edit Products Form
+router.get("/edit-product/:id", controllerAdminData?.editFormProduct);
+
+// Update Edit
+router.post("/edit-product", controllerAdminData.postEditProduct);
 
 // Get Admins Products
 router.get("/products", controllerAdminData?.getProducts);
