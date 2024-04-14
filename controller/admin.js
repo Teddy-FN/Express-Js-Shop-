@@ -3,6 +3,7 @@ const Product = require("../models/product");
 // Admin
 exports.postAddProduct = (req, res, next) => {
   const product = new Product(
+    null,
     req.body.title,
     req.body.imageUrl,
     req.body.price,
@@ -12,23 +13,51 @@ exports.postAddProduct = (req, res, next) => {
   res.redirect("/");
 };
 
-exports.formProduct = (req, res, next) => {
-  res.render("admin/add-product", {
-    pageTitle: "Add Product",
-    formCSS: true,
-    productCSS: true,
-    path: "/admin/add-product",
-  });
-};
-
-// Edit
-exports.editFormProduct = (req, res, next) => {
+// Add
+exports.addFormProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     formCSS: true,
     productCSS: true,
-    path: "/edit/add-product",
+    path: "/admin/add-product",
+    editing: false,
   });
+};
+
+// Edit Form
+exports.editFormProduct = (req, res, next) => {
+  const editMode = req?.query?.edit;
+  if (!editMode) {
+    return res.redirect("/");
+  }
+  const prodId = req?.params?.id;
+  console.log("prodId =>", prodId);
+  Product.findById(prodId, (prod) => {
+    if (!prod) {
+      return res.redirect("/");
+    }
+    res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      formCSS: true,
+      productCSS: true,
+      editing: true,
+      path: "/edit/edit-product",
+      prod: prod,
+    });
+  });
+};
+
+// Post edit
+exports.postEditProduct = (req, res, next) => {
+  const product = new Product(
+    req.body.id,
+    req.body.title,
+    req.body.imageUrl,
+    req.body.price,
+    req.body.description
+  );
+  product.saveProduct();
+  res.redirect("/admin/products");
 };
 
 exports.getProducts = (req, res, next) => {
