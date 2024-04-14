@@ -68,6 +68,13 @@ exports.deleteProduct = (req, res, next) => {
   res.redirect("/admin/products");
 };
 
+// Delete Product Cart
+exports.deleteProductCart = (req, res, next) => {
+  const prodId = req.body.id;
+  Product.deleteProduct(prodId);
+  res.redirect("/admin/products");
+};
+
 // Get Product
 exports.getProducts = (req, res, next) => {
   Product.fetchAll((prod) => {

@@ -4,29 +4,18 @@
     <%- include('../includes/navigation.ejs') %>
 
     <main>
-      <% if (hasProduct) { %>
-      <div class="grid">
-        <% for (let prod of prods) { %>
-        <article class="card product-item">
-          <header class="card__header">
-            <h1 class="product__title"><%= prod.title %></h1>
-          </header>
-          <div class="card__image">
-            <img
-              src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png"
-              alt="A Book"
-            />
-          </div>
-          <div class="card__content">
-            <h2 class="product__price">$19.99</h2>
-            <p class="product__description">
-              A very interesting book about so many even more interesting
-              things!
-            </p>
-          </div>
-        </article>
-        <% } %>
-      </div>
+      <% if (prods.length > 0) { %>
+        <ul>
+        <% prods.forEach(p => { %>
+          <li>
+            <p><%= p.productData.title %> (<%= p.qty %>)</p>
+            <form action="/cart-delete-item" method="POST">
+              <input type="hidden" value="<%= p.productData.id %>" name="id" id="id">
+              <button type="submit" class="btn">Delete Item In Cart</button>
+            </form>
+          </li>  
+        <% }) %>
+        </ul>
       <% } else { %>
         <h1>No Product Cart</h1>
       <% } %>

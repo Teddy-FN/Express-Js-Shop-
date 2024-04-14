@@ -49,25 +49,51 @@ exports.getProductDetails = (req, res, next) => {
 
 // Cart
 exports.getCartProduct = (req, res, next) => {
-  res.render("shop/cart", {
-    pageTitle: "Your Cart",
-    path: "/cart",
-    formCSS: false,
-    productCSS: true,
-    hasProduct: false,
-    prods: [],
+  Cart.getProduct((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = [];
+      for (products of products) {
+        const cartProductData = cart.products.find(
+          (prods) => prods.id === products.id
+        );
+        if (cartProductData) {
+          cartProducts.push({
+            productData: products,
+            qty: cartProductData.qty,
+          });
+        }
+      }
+      res.render("shop/cart", {
+        pageTitle: "Your Cart",
+        path: "/cart",
+        formCSS: false,
+        productCSS: true,
+        hasProduct: false,
+        prods: cartProducts,
+      });
+    });
   });
 };
 
 // Post Cart
 exports.postCart = (req, res, next) => {
   const prodId = req.body.id;
-  console.log("PROD ID =>", prodId);
   // Call Cart Models
   Product.findById(prodId, (prod) => {
     Cart.addProduct(prodId, prod.price);
   });
   res.redirect("/cart");
+};
+
+// Delete Product Cart
+exports.postDeleteProductCart = (req, res, next) => {
+  const prodId = req.body.id;
+  console.log("PROD ID IKI BRAY", prodId);
+  Product.findById(prodId, (prod) => {
+    console.log('PROD =>', prod);
+    Cart.deleteInCart(prodId, prod.price);
+    res.redirect('/cart')
+  });
 };
 
 // Orders
