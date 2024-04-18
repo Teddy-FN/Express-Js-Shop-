@@ -3,18 +3,11 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const app = express();
 
-// Database
-const db = require("./utils/database");
-
 const controllerError = require("./controller/404");
 
 // Routes
 const adminData = require("./routes/admin");
 const shop = require("./routes/shop");
-
-db.execute("SELECT * FROM products").then((prod) => {
-  console.log('PROD =>', prod);
-});
 
 app.set("view engine", "ejs");
 app.set("views", "views");

@@ -9,8 +9,14 @@ exports.postAddProduct = (req, res, next) => {
     req.body.price,
     req.body.description
   );
-  product.saveProduct();
-  res.redirect("/");
+  product
+    .saveProduct()
+    .then((data) => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log('ERR =>', err);
+    });
 };
 
 // Add
@@ -77,15 +83,19 @@ exports.deleteProductCart = (req, res, next) => {
 
 // Get Product
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((prod) => {
-    res.render("admin/products", {
-      pageTitle: "Admin Products",
-      path: "/admin/products",
-      formCSS: false,
-      productCSS: true,
-      hasProduct: false,
-      hasProduct: prod?.length > 0,
-      prods: prod,
+  Product.fetchAll()
+    .then(([rows, tableData]) => {
+      res.render("admin/products", {
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+        formCSS: false,
+        productCSS: true,
+        hasProduct: false,
+        hasProduct: rows?.length > 0,
+        prods: rows,
+      });
+    })
+    .catch((err) => {
+      return err;
     });
-  });
 };
