@@ -3,30 +3,38 @@ const Cart = require("../models/cart");
 
 // Home
 exports.index = (req, res, index) => {
-  Product.fetchAll((prod) => {
-    res.render("shop/index", {
-      pageTitle: "All Products",
-      path: "/",
-      prods: prod,
-      formCSS: false,
-      productCSS: true,
-      hasProduct: prod.length > 0,
+  Product.fetchAll()
+    .then(([rows, tableData]) => {
+      res.render("shop/index", {
+        pageTitle: "All Products",
+        path: "/",
+        prods: rows,
+        formCSS: false,
+        productCSS: true,
+        hasProduct: rows.length > 0,
+      });
+    })
+    .catch((err) => {
+      return err;
     });
-  });
 };
 
 // Products
 exports.getProduct = (req, res, next) => {
-  Product.fetchAll((prod) => {
-    res.render("shop/product-list", {
-      pageTitle: "Shop",
-      path: "/products",
-      prods: prod,
-      formCSS: false,
-      productCSS: true,
-      hasProduct: prod.length > 0,
+  Product.fetchAll()
+    .then(([rows, tableData]) => {
+      res.render("shop/product-list", {
+        pageTitle: "Shop",
+        path: "/products",
+        prods: rows,
+        formCSS: false,
+        productCSS: true,
+        hasProduct: rows.length > 0,
+      });
+    })
+    .catch((err) => {
+      return err;
     });
-  });
 };
 
 // Products Details
@@ -90,9 +98,9 @@ exports.postDeleteProductCart = (req, res, next) => {
   const prodId = req.body.id;
   console.log("PROD ID IKI BRAY", prodId);
   Product.findById(prodId, (prod) => {
-    console.log('PROD =>', prod);
+    console.log("PROD =>", prod);
     Cart.deleteInCart(prodId, prod.price);
-    res.redirect('/cart')
+    res.redirect("/cart");
   });
 };
 
