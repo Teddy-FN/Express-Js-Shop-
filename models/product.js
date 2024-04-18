@@ -89,5 +89,7 @@ module.exports = class Product {
     //   const prod = product.find((items) => items?.id === id);
     //   cb(prod);
     // });
+
+    return db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
   }
 };
