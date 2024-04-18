@@ -11,6 +11,8 @@
       <h2><%= prods.description %></h2>
       <p><%= prods.price %></p>
       <a class="btn" href="/products">Back To List</a>
-      <%- include('../includes/add-to-cart.ejs') %>
+      <%- include('../includes/add-to-cart.ejs', {
+        prod: prods.id
+      }) %>
     </main>
 <%- include('../includes/end.ejs') %>
