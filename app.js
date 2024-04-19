@@ -1,6 +1,10 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+
+// Sequalize
+const sequelize = require("./utils/database");
+
 const app = express();
 
 const controllerError = require("./controller/404");
@@ -21,4 +25,12 @@ app.use(shop);
 
 app.use(controllerError.errorPage);
 
-app.listen(5000);
+sequelize
+  .sync()
+  .then((res) => {
+    console.log(res);
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });

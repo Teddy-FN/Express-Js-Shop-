@@ -2,20 +2,17 @@ const Product = require("../models/product");
 
 // Admin
 exports.postAddProduct = (req, res, next) => {
-  const product = new Product(
-    null,
-    req.body.title,
-    req.body.imageUrl,
-    req.body.price,
-    req.body.description
-  );
-  product
-    .saveProduct()
-    .then((data) => {
+  Product.create({
+    title: req.body.title,
+    imageUrl: req.body.imageUrl,
+    price: req.body.price,
+    description: req.body.description,
+  })
+    .then(() => {
       res.redirect("/");
     })
     .catch((err) => {
-      console.log('ERR =>', err);
+      console.log(err);
     });
 };
 
@@ -38,7 +35,7 @@ exports.editFormProduct = (req, res, next) => {
   }
   const prodId = req?.params?.id;
   console.log("prodId =>", prodId);
-  Product.findById(prodId, (prod) => {
+  Product.findByPk(prodId, (prod) => {
     if (!prod) {
       return res.redirect("/");
     }
@@ -83,19 +80,17 @@ exports.deleteProductCart = (req, res, next) => {
 
 // Get Product
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, tableData]) => {
+  Product.findAll()
+    .then((product) => {
       res.render("admin/products", {
         pageTitle: "Admin Products",
         path: "/admin/products",
         formCSS: false,
         productCSS: true,
         hasProduct: false,
-        hasProduct: rows?.length > 0,
-        prods: rows,
+        hasProduct: product?.length > 0,
+        prods: product,
       });
     })
-    .catch((err) => {
-      return err;
-    });
+    .catch((err) => console.log(err));
 };
