@@ -3,50 +3,49 @@ const Cart = require("../models/cart");
 
 // Home
 exports.index = (req, res, index) => {
-  Product.fetchAll()
-    .then(([rows, tableData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/index", {
         pageTitle: "All Products",
         path: "/",
-        prods: rows,
+        prods: products,
         formCSS: false,
         productCSS: true,
-        hasProduct: rows.length > 0,
+        hasProduct: products.length > 0,
       });
     })
-    .catch((err) => {
-      return err;
-    });
+    .catch((err) => console.log(err));
 };
 
 // Products
 exports.getProduct = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, tableData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/product-list", {
         pageTitle: "Shop",
         path: "/products",
-        prods: rows,
+        prods: products,
         formCSS: false,
         productCSS: true,
-        hasProduct: rows.length > 0,
+        hasProduct: products.length > 0,
       });
     })
     .catch((err) => {
-      return err;
+      console.log(err);
     });
 };
 
 // Products Details
 exports.getProductDetails = (req, res, next) => {
   const prodId = req.params.id;
-  Product.findById(prodId)
-    .then(([prods, table]) => {
-      console.log('PROD =>', prods);
+
+  // Product.findAll().then().catch();
+  Product.findByPk(prodId)
+    .then((prods) => {
       res.render("shop/product-detail", {
-        pageTitle: prods?.[0].title,
+        pageTitle: prods[0].title,
         path: "/products",
-        prods: prods?.[0],
+        prods: prods[0],
         formCSS: false,
         productCSS: true,
       });
@@ -59,7 +58,7 @@ exports.getProductDetails = (req, res, next) => {
 // Cart
 exports.getCartProduct = (req, res, next) => {
   Cart.getProduct((cart) => {
-    Product.fetchAll((products) => {
+    Product.findAll((products) => {
       const cartProducts = [];
       for (products of products) {
         const cartProductData = cart.products.find(
@@ -88,7 +87,7 @@ exports.getCartProduct = (req, res, next) => {
 exports.postCart = (req, res, next) => {
   const prodId = req.body.id;
   // Call Cart Models
-  Product.findById(prodId, (prod) => {
+  Product.findByPk(prodId, (prod) => {
     Cart.addProduct(prodId, prod.price);
   });
   res.redirect("/cart");
@@ -97,9 +96,7 @@ exports.postCart = (req, res, next) => {
 // Delete Product Cart
 exports.postDeleteProductCart = (req, res, next) => {
   const prodId = req.body.id;
-  console.log("PROD ID IKI BRAY", prodId);
-  Product.findById(prodId, (prod) => {
-    console.log("PROD =>", prod);
+  Product.findByPk(prodId, (prod) => {
     Cart.deleteInCart(prodId, prod.price);
     res.redirect("/cart");
   });
