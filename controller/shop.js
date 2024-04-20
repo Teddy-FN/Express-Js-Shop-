@@ -38,21 +38,17 @@ exports.getProduct = (req, res, next) => {
 // Products Details
 exports.getProductDetails = (req, res, next) => {
   const prodId = req.params.id;
-
-  // Product.findAll().then().catch();
-  Product.findByPk(prodId)
+  Product.findAll({ where: { id: prodId } })
     .then((prods) => {
       res.render("shop/product-detail", {
-        pageTitle: prods[0].title,
         path: "/products",
-        prods: prods[0],
+        prods: prods?.[0],
+        pageTitle: "Detail Product",
         formCSS: false,
         productCSS: true,
       });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log("ERR =>", err));
 };
 
 // Cart
