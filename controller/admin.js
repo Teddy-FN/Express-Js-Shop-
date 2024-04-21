@@ -59,7 +59,7 @@ exports.postEditProduct = (req, res, next) => {
       prod.imageUrl = req.body.imageUrl;
       prod.price = req.body.price;
       prod.description = req.body.description;
-      return prod.save();
+      return prod.save()
     })
     .then((result) => {
       console.log("RESULT", result);
