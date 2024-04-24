@@ -2,12 +2,15 @@ const Product = require("../models/product");
 
 // Admin
 exports.postAddProduct = (req, res, next) => {
-  Product.create({
-    title: req.body.title,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    description: req.body.description,
-  })
+  console.log("REQ =====>", req);
+
+  req.user
+    .createProduct({
+      title: req.body.title,
+      imageUrl: req.body.imageUrl,
+      price: req.body.price,
+      description: req.body.description,
+    })
     .then(() => {
       res.redirect("/");
     })
