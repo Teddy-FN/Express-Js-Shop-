@@ -37,8 +37,16 @@ exports.editFormProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req?.params?.id;
-  Product.findByPk(prodId)
-    .then((prod) => {
+
+  req.user
+    .getProducts({
+      where: {
+        id: prodId,
+      },
+    })
+    .then((prods) => {
+      console.log("PRODS =>", prods);
+      const prod = prods[0];
       if (!prod) {
         return res.redirect("/");
       }
@@ -56,7 +64,7 @@ exports.editFormProduct = (req, res, next) => {
 
 // Post edit
 exports.postEditProduct = (req, res, next) => {
-  Product.findByPk(req.body.id)
+  Product.findById(req.body.id)
     .then((prod) => {
       prod.title = req.body.title;
       prod.imageUrl = req.body.imageUrl;
@@ -74,7 +82,7 @@ exports.postEditProduct = (req, res, next) => {
 // Delete Product
 exports.deleteProduct = (req, res, next) => {
   const prodId = req.body.id;
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then((prod) => {
       return prod.destroy();
     })
@@ -91,7 +99,8 @@ exports.deleteProductCart = (req, res, next) => {
 
 // Get Product
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  req.user
+    .getProducts()
     .then((product) => {
       res.render("admin/products", {
         pageTitle: "Admin Products",

@@ -83,7 +83,7 @@ exports.getCartProduct = (req, res, next) => {
 exports.postCart = (req, res, next) => {
   const prodId = req.body.id;
   // Call Cart Models
-  Product.findByPk(prodId, (prod) => {
+  Product.findById(prodId, (prod) => {
     Cart.addProduct(prodId, prod.price);
   });
   res.redirect("/cart");
@@ -92,7 +92,7 @@ exports.postCart = (req, res, next) => {
 // Delete Product Cart
 exports.postDeleteProductCart = (req, res, next) => {
   const prodId = req.body.id;
-  Product.findByPk(prodId, (prod) => {
+  Product.findById(prodId, (prod) => {
     Cart.deleteInCart(prodId, prod.price);
     res.redirect("/cart");
   });
