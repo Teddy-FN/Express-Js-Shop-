@@ -81,11 +81,49 @@ exports.getCartProduct = (req, res, next) => {
 // Post Cart
 exports.postCart = (req, res, next) => {
   const prodId = req.body.id;
+  let fetchedCart;
   // Call Cart Models
-  Product.findById(prodId, (prod) => {
-    Cart.addProduct(prodId, prod.price);
-  });
-  res.redirect("/cart");
+
+  req.user
+    .getCart()
+    .then((prod) => {
+      fetchedCart = prod;
+      return prod.getProducts({ where: { id: prodId } });
+    })
+    .then((products) => {
+      let product;
+
+      if (products.length > 0) {
+        product = products[0];
+      }
+
+      let newQuantity = 1;
+      if (product) {
+        // ...
+      }
+
+      return Product.findAll({ where: { id: prodId } })
+        .then((prods) => {
+          fetchedCart.addProduct(prods, {
+            through: {
+              quantity: newQuantity,
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  // Product.findById(prodId, (prod) => {
+  //   Cart.addProduct(prodId, prod.price);
+  // });
+  // res.redirect("/cart");
 };
 
 // Delete Product Cart
