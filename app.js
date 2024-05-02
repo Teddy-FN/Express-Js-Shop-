@@ -42,7 +42,7 @@ Product.belongsTo(User, {
   constraints: true,
   onDelete: "CASCADE",
 });
-User.hasMany(Product)
+User.hasMany(Product);
 User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
@@ -51,9 +51,10 @@ Product.belongsToMany(Cart, { through: CartItem });
 // Add Association Product
 
 sequelize
-  .sync({
-    force: true,
-  })
+  // .sync({
+  //   force: true,
+  // })
+  .sync()
   .then(() => {
     return User.findById(1);
   })
@@ -65,6 +66,9 @@ sequelize
       });
 
     return user;
+  })
+  .then((user) => {
+    return user.createCart();
   })
   .then(() => {
     app.listen(5000);

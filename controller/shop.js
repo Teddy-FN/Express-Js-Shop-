@@ -53,30 +53,29 @@ exports.getProductDetails = (req, res, next) => {
 
 // Cart
 exports.getCartProduct = (req, res, next) => {
-  Cart.getProduct((cart) => {
-    Product.findAll((products) => {
-      const cartProducts = [];
-      for (products of products) {
-        const cartProductData = cart.products.find(
-          (prods) => prods.id === products.id
-        );
-        if (cartProductData) {
-          cartProducts.push({
-            productData: products,
-            qty: cartProductData.qty,
+  console.log("REQ =>", req.user.cart);
+  req.user
+    .getCart()
+    .then((data) => {
+      return data
+        .getProducts()
+        .then((result) => {
+          res.render("shop/cart", {
+            pageTitle: "Your Cart",
+            path: "/cart",
+            formCSS: false,
+            productCSS: true,
+            hasProduct: false,
+            prods: result,
           });
-        }
-      }
-      res.render("shop/cart", {
-        pageTitle: "Your Cart",
-        path: "/cart",
-        formCSS: false,
-        productCSS: true,
-        hasProduct: false,
-        prods: cartProducts,
-      });
+        })
+        .catch((err) => {
+          console.log("Err =>", err);
+        });
+    })
+    .catch((err) => {
+      console.log("Err =>", err);
     });
-  });
 };
 
 // Post Cart
