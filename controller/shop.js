@@ -125,10 +125,23 @@ exports.postCart = (req, res, next) => {
 // Delete Product Cart
 exports.postDeleteProductCart = (req, res, next) => {
   const prodId = req.body.id;
-  Product.findById(prodId, (prod) => {
-    Cart.deleteInCart(prodId, prod.price);
-    res.redirect("/cart");
-  });
+  req.user
+    .getCart()
+    .then((prod) => {
+      return prod.getProducts({
+        where: {
+          id: prodId,
+        },
+      });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
 };
 
 // Orders
