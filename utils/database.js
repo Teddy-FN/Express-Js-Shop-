@@ -1,19 +1,17 @@
-// const mysql = require("mysql2");
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
 
-// const pool = mysql.createPool({
-//   host: "localhost",
-//   user: "root",
-//   database: "node-complete",
-//   password: "teddyferdian98",
-// });
+const mongoConnect = (callback) => {
+  MongoClient.connect(
+    "mongodb+srv://teddyferdian:teddyferdian98@cluster0.3slbumq.mongodb.net/?retryWrites=true&w=majority"
+  )
+    .then((client) => {
+      console.log("client =>", client);
+      callback(client);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-// module.exports = pool.promise();
-
-const Sequalize = require("sequelize");
-
-const sequalize = new Sequalize("node-complete", "root", "teddyferdian98", {
-  dialect: "mysql",
-  host: "localhost",
-});
-
-module.exports = sequalize;
+module.exports = mongoConnect;
