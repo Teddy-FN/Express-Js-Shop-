@@ -23,6 +23,21 @@ class Product {
         console.log("ERR =>", err);
       });
   }
+
+  static fetchAll() {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find()
+      .toArray()
+      .then((prod) => {
+        console.log("PROD =>", prod);
+        return prod;
+      })
+      .catch((err) => {
+        console.log('ERR =>', err);
+      });
+  }
 }
 
 // const Product = sequalize.define("product", {

@@ -20,7 +20,7 @@ const controllerError = require("./controller/404");
 
 // Routes
 const adminData = require("./routes/admin");
-// const shop = require("./routes/shop");
+const shop = require("./routes/shop");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/admin", adminData);
-// app.use(shop);
+app.use(shop);
 
 app.use(controllerError.errorPage);
 
