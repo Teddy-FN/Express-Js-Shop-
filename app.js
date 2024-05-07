@@ -12,14 +12,14 @@ const bodyParser = require("body-parser");
 // const OrderItems = require("./models/order-items");
 
 // Mongo DB
-const mongoConnect = require("./utils/database");
+const { mongoConnect } = require("./utils/database");
 
 const app = express();
 
 const controllerError = require("./controller/404");
 
 // Routes
-// const adminData = require("./routes/admin");
+const adminData = require("./routes/admin");
 // const shop = require("./routes/shop");
 
 app.set("view engine", "ejs");
@@ -35,16 +35,16 @@ app.use((req, res, next) => {
   //     next();
   //   })
   //   .catch((err) => console.log(err));
+  next();
 });
 
 // Routes
-// app.use("/admin", adminData);
+app.use("/admin", adminData);
 // app.use(shop);
 
 app.use(controllerError.errorPage);
 
-mongoConnect((client) => {
-  console.log('CLIENT =>', client);
+mongoConnect(() => {
   app.listen(5000);
 });
 

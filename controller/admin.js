@@ -2,21 +2,34 @@ const Product = require("../models/product");
 
 // Admin
 exports.postAddProduct = (req, res, next) => {
-  console.log("REQ =====>", req);
-
-  req.user
-    .createProduct({
-      title: req.body.title,
-      imageUrl: req.body.imageUrl,
-      price: req.body.price,
-      description: req.body.description,
-    })
+  const product = new Product(
+    req?.body?.title,
+    req?.body?.price,
+    req?.body?.description,
+    req?.body?.imageUrl
+  );
+  product
+    .save()
     .then(() => {
       res.redirect("/");
     })
     .catch((err) => {
       console.log(err);
     });
+
+  // req.user
+  //   .createProduct({
+  //     title: req.body.title,
+  //     imageUrl: req.body.imageUrl,
+  //     price: req.body.price,
+  //     description: req.body.description,
+  //   })
+  //   .then(() => {
+  //     res.redirect("/");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 // Add
@@ -45,7 +58,6 @@ exports.editFormProduct = (req, res, next) => {
       },
     })
     .then((prods) => {
-      console.log("PRODS =>", prods);
       const prod = prods[0];
       if (!prod) {
         return res.redirect("/");
