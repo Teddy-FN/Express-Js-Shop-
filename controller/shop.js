@@ -40,17 +40,30 @@ exports.getProduct = (req, res, next) => {
 // Products Details
 exports.getProductDetails = (req, res, next) => {
   const prodId = req.params.id;
-  Product.findAll({ where: { id: prodId } })
-    .then((prods) => {
+  console.log("prodId =>", prodId);
+  Product.findById(prodId)
+    .then((prod) => {
+      console.log("PROD =>", prod);
       res.render("shop/product-detail", {
         path: "/products",
-        prods: prods?.[0],
+        prods: prod,
         pageTitle: "Detail Product",
         formCSS: false,
         productCSS: true,
       });
     })
-    .catch((err) => console.log("ERR =>", err));
+    .catch((err) => console.log(err));
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((prods) => {
+  //     res.render("shop/product-detail", {
+  //       path: "/products",
+  //       prods: prods?.[0],
+  //       pageTitle: "Detail Product",
+  //       formCSS: false,
+  //       productCSS: true,
+  //     });
+  //   })
+  //   .catch((err) => console.log("ERR =>", err));
 };
 
 // Cart
